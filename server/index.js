@@ -14,11 +14,59 @@ const grpcObject = grpc.loadPackageDefinition(productProtoDefinition)
 const productPackageDefinition = grpcObject.product
 
 // knex query
-function listProducts(call, callback) {}
-function readProduct(call, callback) {}
-function createProduct(call, callback) { }
-function updateProduct(call, callback) { }
-function deleteProduct(call, callback) { }
+function listProducts(call, callback) {
+  knex('products').then((data) => {
+    callback(null, { products: data})
+  })
+}
+function readProduct(call, callback) {
+  knex("products").where({
+    id: parseInt(call.request.id)
+  }).then((data) => {
+    if (data.length) {
+      callback(null, data[0])
+    } else {
+      callback("That product does not exit")
+    }
+  })
+}
+function createProduct(call, callback) { 
+  knex("products").insert({
+    name: call.request.name,
+    price: call.request.price
+  }).then(() => {
+    callback(null, { status: 'success'})
+  })
+}
+function updateProduct(call, callback) {
+  console.log(call.request)
+  knex("products")
+    .where({ id: parseInt(call.request.id) })
+    .update({
+      name: call.request.name,
+      price: call.request.price,
+    }).returning()
+    .then((data) => {
+      if (data) {
+        callback(null, {status : 'success'})
+      } else {
+        callback("That product does not exist")
+      }
+  })
+}
+function deleteProduct(call, callback) { 
+  knex("products")
+    .where({ id: parseInt(call.request.id) })
+    .delete()
+    .returning()
+    .then((data) => {
+      if (data) {
+        callback(null, { status: "success" });
+      } else {
+        callback("That product does not exist");
+      }
+    });
+}
 
 // main
 function main() {

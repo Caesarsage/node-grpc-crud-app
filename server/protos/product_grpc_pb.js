@@ -85,8 +85,8 @@ var ProductServiceService = exports.ProductServiceService = {
     responseSerialize: serialize_product_ProductList,
     responseDeserialize: deserialize_product_ProductList,
   },
-  readPrduct: {
-    path: '/product.ProductService/readPrduct',
+  readProduct: {
+    path: '/product.ProductService/readProduct',
     requestStream: false,
     responseStream: false,
     requestType: protos_product_pb.ProductId,

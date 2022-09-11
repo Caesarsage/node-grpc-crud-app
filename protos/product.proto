@@ -6,7 +6,7 @@ package product;
 
 service ProductService {
   rpc listProducts (Empty) returns (ProductList) {}
-  rpc readPrduct(ProductId) returns (Product) {}
+  rpc readProduct(ProductId) returns (Product) {}
   rpc createProduct(newProduct) returns (result) {}
   rpc updateProduct(Product) returns (result) {}
   rpc deleteProduct(ProductId) returns (result) {}
