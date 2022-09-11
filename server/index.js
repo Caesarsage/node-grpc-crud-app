@@ -7,10 +7,11 @@ const environment = process.env.ENVIRONMENT || "development";
 const config = require("./knexfile")[environment];
 const knex = require('knex')(config)
 
-// grpc
-const productProtoPath = path.join(__dirname, '..', 'protos', 'product.proto')
-const productProtoDefinition = protoLoader.loadSync(productProtoPath)
-const productPackageDefinition = grpc.loadPackageDefinition(productProtoDefinition)
+// grpc server
+const productProtoPath = path.join(__dirname, 'protos', 'product.proto')
+const productProtoDefinition = protoLoader.loadSync('../protos/product.proto')
+const grpcObject = grpc.loadPackageDefinition(productProtoDefinition)
+const productPackageDefinition = grpcObject.product
 
 // knex query
 function listProducts(call, callback) {}
@@ -23,7 +24,7 @@ function deleteProduct(call, callback) { }
 function main() {
   const server = new grpc.Server();
   // gRPC services - Adds the gRPC service, defined in the product.proto to the server.
-  server.addService(productPackageDefinition.ProductService.service, {
+  server.addService(productPackageDefinition.ProductService.service , {
     listProducts: listProducts,
     readProduct: readProduct,
     updateProduct: updateProduct,
